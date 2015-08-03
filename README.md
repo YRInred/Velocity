@@ -101,7 +101,7 @@ new RequestEntity()
 ```
 
 
-There have many funcation will be build in the framwork,just for android developer to development quickly~
+There have many function will be build in the framwork,just for android developer to development quickly~
 Thank everyone;
 
 

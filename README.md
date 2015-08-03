@@ -8,7 +8,7 @@ public class MyApplication extends VelocityApplication {
       ...
 }
 ```
-  Makesure your AndroidManifest's application name is your own application \
+  Makesure your AndroidManifest's application name is your own application 
 ```XML
 <application
         android:name=".application.MyApplication"
@@ -77,5 +77,19 @@ public class Weather extends VelocityParser<Weather> {//Entity extend VelocityPa
     ...
   }
 ```
+  For ReuqestItem
+```JAVA
+ public class HttpApi {
+    public static final int WEATHERTAGINT = 0X1314;
+    public RequestEntity GetWeatherApi(){
+       return new RequestEntity()//Request item
+                .setUrl("http://www.weather.com.cn/adat/sk/101010100.html")
+                .setTagInt(WEATHERTAGINT)
+                .setParser(new Weather());
+    }
+}
+```
+
+
 
 

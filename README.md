@@ -77,7 +77,7 @@ public class Weather extends VelocityParser<Weather> {//Entity extend VelocityPa
     ...
   }
 ```
-  For ReuqestItem
+  For RequestItem
 ```JAVA
  public class HttpApi {
     public static final int WEATHERTAGINT = 0X1314;
@@ -89,7 +89,20 @@ public class Weather extends VelocityParser<Weather> {//Entity extend VelocityPa
     }
 }
 ```
+Which choose can config the Request Item?
+====
+```JAVA
+new RequestEntity()
+                .setUrl("")//url
+                .setRequestMethod(Request.Method.POST)//default get
+                .setParams(null)//params
+                .setTagInt(0)//tagInt
+                .setTag("");//tag
+```
 
+
+There have many funcation will be build in the framwork,just for android developer to development quickly~
+Thank everyone;
 
 
 

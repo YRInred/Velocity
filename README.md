@@ -6,6 +6,10 @@ Config
 ```JAVA
 public class MyApplication extends VelocityApplication {
       ...
+        @Override
+    public void crashTodo(String sb) {//it can catch your crash String then you can do anything
+
+    }
 }
 ```
   Makesure your AndroidManifest's application name is your own application 
@@ -19,26 +23,23 @@ How to use the framework?
 ====
   For Activity
 ```JAVA
-public class MainActivity extends VelocityActivity //velocityActivity
-        implements RequestListener {//requestListener
+public class MainActivity extends VelocityHttpActivity { //VelocityHttpActivity
         
         ...
         
         @Override
     protected void initData() {
-        requestEntitys = new ArrayList<>();
-        requestEntitys.add(MyAppCenter.getInstance().api.GetWeatherApi());//add RequestItem in List
-
-        setRequestListener(this);//addRequestListener
         super.initData();
+        addRequestEntity(MyAppCenter.getInstance().api.GetWeatherApi());//add RequestItem in List
+        startRequest();//beginRequest
     }
         
         ...
         
-         @Override
-    public void onResponse(int tagInt, String tag, Object entity) {//sucessResponse
+    @Override
+    protected void onSuccessResponse(int tagInt, String tag, Object entity) {
         switch (tagInt) {
-            case HttpApi.WEATHERTAGINT://tagInt
+            case HttpApi.WEATHERTAGINT:
                 weather = (Weather) entity;
                 weatherText.setText(weather.toString());
                 break;
@@ -46,7 +47,7 @@ public class MainActivity extends VelocityActivity //velocityActivity
     }
 
     @Override
-    public void onErrorResponse(int tagInt, String tag, VolleyError volleyError) {//failResponse
+    protected void onErrorsResponse(int tagInt, String tag, VolleyError volleyError) {
 
     }
 }

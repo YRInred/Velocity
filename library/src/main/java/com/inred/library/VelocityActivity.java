@@ -5,23 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.inred.library.application.VelocityApplication;
-import com.inred.library.entity.RequestEntity;
-import com.inred.library.irequest.RequestListener;
-
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by inred on 2015/7/31.
  */
 public abstract class VelocityActivity extends Activity {
-    protected List<RequestEntity> RequestEntitys;
-    private RequestListener requestListener;
 
 
     @Override
@@ -34,11 +21,11 @@ public abstract class VelocityActivity extends Activity {
     }
 
     /**
-     * ³õÊ¼»¯Êı¾İ
+     * åˆå§‹åŒ–æ•°æ®
      */
     protected void initData() {
-        addRequest(RequestEntitys);
     }
+
 
 
     /**
@@ -48,12 +35,12 @@ public abstract class VelocityActivity extends Activity {
     protected abstract int main_layout();
 
     /**
-     * ³õÊ¼»¯ÊÓÍ¼
+     * åˆå§‹åŒ–è§†å›¾
      */
     protected abstract void initView();
 
     /**
-     * ³õÊ¼»¯·½·¨
+     * åˆå§‹åŒ–æ–¹æ³•
      */
     protected void initVoid() {
     }
@@ -68,7 +55,7 @@ public abstract class VelocityActivity extends Activity {
 
 
     /**
-     * »ù´¡Ìø×ªActivity
+     * åŸºç¡€è·³è½¬Activity
      * @param activity
      */
     protected <T> void toActivity(Class<T> activity){
@@ -76,55 +63,6 @@ public abstract class VelocityActivity extends Activity {
         startActivity(intent);
     }
 
-    /**
-     * ÉèÖÃÍøÂçÇëÇó¼àÌı
-     * @param requestListener
-     */
-    protected void setRequestListener(RequestListener requestListener){
-        this.requestListener = requestListener;
-    }
 
-    /**
-     * Ìí¼ÓÍøÂçÇëÇó
-     * @param RequestEntitys
-     */
-    private void addRequest(List<RequestEntity> RequestEntitys) {
-        if (RequestEntitys == null || RequestEntitys.isEmpty())
-            return;
-
-        StringRequest stringRequest;
-        for (final RequestEntity entitiy : RequestEntitys) {
-            stringRequest = new StringRequest(
-                    entitiy.getRequestMethod(),
-                    entitiy.getUrl(),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String s) {
-                            if (requestListener != null)
-                                requestListener.onResponse(entitiy.getTagInt(),
-                                        entitiy.getTag(),
-                                        entitiy.getParser().doParser(s));
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            if (requestListener != null)
-                                requestListener.onErrorResponse(entitiy.getTagInt(),
-                                        entitiy.getTag(),
-                                        volleyError);
-                        }
-                    })
-            {
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    if (entitiy.getParams() == null || entitiy.getParams().isEmpty())
-                        return super.getParams();
-                    return entitiy.getParams();
-                }
-            };
-            VelocityApplication.getInstance().addToRequestQueue(stringRequest, entitiy.getTag());
-        }
-    }
 
 }

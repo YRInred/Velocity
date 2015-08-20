@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
-    <file url="file://$PROJECT_DIR$/library/libs/volley.jar" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/library/src/main/java/com/inred/library/VelocityActivity.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/library/src/main/java/com/inred/library/application/VelocityApplication.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/library/src/main/java/com/inred/library/entity/RequestEntity.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/library/src/main/java/com/inred/library/entity/parser/VelocityParser.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/library/src/main/java/com/inred/library/irequest/RequestListener.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/library/src/main/java/com/inred/library/application/VelocityApplication.java" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

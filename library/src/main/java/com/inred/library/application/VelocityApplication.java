@@ -1,5 +1,6 @@
 package com.inred.library.application;
 
+import android.app.Activity;
 import android.app.Application;
 import android.text.TextUtils;
 
@@ -7,11 +8,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
+import com.inred.library.exception.CrashHandler;
+
+import java.util.List;
 
 /**
  * Created by inred on 2015/7/31.
  */
-public class VelocityApplication extends Application {
+public abstract class VelocityApplication extends Application {
 
     /**
      * Log or request TAG
@@ -20,7 +24,9 @@ public class VelocityApplication extends Application {
 
     private static VelocityApplication app;
 
-    public static VelocityApplication getInstance(){
+    private List<Activity> activityList;
+
+    public static VelocityApplication getInstance() {
         return app;
     }
 
@@ -30,10 +36,51 @@ public class VelocityApplication extends Application {
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
-        app  = this;
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(this);
+        app = this;
 
     }
 
+    /**
+     * ɾ������activity
+     *
+     * @param b
+     */
+    public void finishAll(boolean b) {
+        int size;
+        if (b)
+            size = activityList.size();
+        else
+            size = activityList.size() - 1;
+        for (int i = 0; i < size; i++) {
+            Activity activity = activityList.get(i);
+            if (activity != null) {
+                activity.finish();
+            }
+        }
+    }
+
+    /**
+     * ɾ��activity
+     *
+     * @param activity
+     */
+    public void delActivity(Activity activity) {
+        if (activity != null) {
+            activityList.remove(activity);
+        }
+
+    }
+
+    /**
+     * ���activity
+     *
+     * @param activity
+     */
+    public void addActivity(Activity activity) {
+        activityList.add(activity);
+    }
 
 
     /**
@@ -94,5 +141,12 @@ public class VelocityApplication extends Application {
             mRequestQueue.cancelAll(tag);
         }
     }
+
+    /**
+     * 异常处理-上传或保存
+     * @param sb
+     */
+    public abstract void crashTodo(String sb);
+
 
 }

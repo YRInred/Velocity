@@ -7,16 +7,16 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 
 /**
- * ÍøÂçÇëÇó¶ÔÏóÀà
+ * ç½‘ç»œè¯·æ±‚å¯¹è±¡ç±»
  * Created by inred on 2015/7/31.
  */
 public class RequestEntity {
 
     private int tagInt;
-    private String tag = "";//ÇëÇóÍ·
-    private String url;//ÇëÇóurl
-    private int requestMethod = Request.Method.GET;//Ä¬ÈÏÎªget·½·¨
-    private HashMap<String,String> params;//²ÎÊı
+    private String tag = "";//è¯·æ±‚å¤´
+    private String url;//è¯·æ±‚url
+    private int requestMethod = Request.Method.GET;//é»˜è®¤ä¸ºgetæ–¹æ³•
+    private HashMap<String,String> params;//å‚æ•°
     private VelocityParser parser;
 
 

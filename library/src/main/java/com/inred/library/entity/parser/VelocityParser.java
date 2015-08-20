@@ -1,7 +1,7 @@
 package com.inred.library.entity.parser;
 
 /**
- * 实体类解析器
+ * 瀹炰綋绫昏В鏋愬櫒
  * Created by inred on 2015/7/31.
  */
 public abstract class VelocityParser<T> {

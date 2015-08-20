@@ -3,7 +3,7 @@ package com.inred.library.irequest;
 import com.android.volley.VolleyError;
 
 /**
- * ÇëÇó»Øµ÷
+ * è¯·æ±‚å›žè°ƒ
  * Created by inred on 2015/7/31.
  */
 public interface RequestListener {

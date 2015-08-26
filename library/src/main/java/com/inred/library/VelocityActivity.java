@@ -53,6 +53,13 @@ public abstract class VelocityActivity extends Activity {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * showToast
+     * @param resId
+     */
+    protected void showToast(int resId) {
+        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
+    }
 
     /**
      * 基础跳转Activity

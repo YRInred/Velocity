@@ -3,7 +3,9 @@ package com.inred.library;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
+
+import com.inred.library.application.VelocityApplication;
+import com.inred.library.velocitycenter.VelocityCenter;
 
 /**
  * Created by inred on 2015/7/31.
@@ -14,6 +16,7 @@ public abstract class VelocityActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        VelocityApplication.getInstance().addActivity(this);
         initData();
         setContentView(main_layout());
         initView();
@@ -50,7 +53,7 @@ public abstract class VelocityActivity extends Activity {
      * @param s
      */
     protected void showToast(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        VelocityCenter.getInstance().helper.showToast(s, this);
     }
 
     /**
@@ -58,7 +61,7 @@ public abstract class VelocityActivity extends Activity {
      * @param resId
      */
     protected void showToast(int resId) {
-        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
+        VelocityCenter.getInstance().helper.showToast(resId, this);
     }
 
     /**
@@ -70,6 +73,9 @@ public abstract class VelocityActivity extends Activity {
         startActivity(intent);
     }
 
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VelocityApplication.getInstance().removeActivity(this);
+    }
 }

@@ -9,8 +9,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 import com.inred.library.exception.CrashHandler;
+import com.inred.library.velocitycenter.VelocityCenter;
 
-import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by inred on 2015/7/31.
@@ -24,7 +25,7 @@ public abstract class VelocityApplication extends Application {
 
     private static VelocityApplication app;
 
-    private List<Activity> activityList;
+    private Stack<Activity> activityStack;
 
     public static VelocityApplication getInstance() {
         return app;
@@ -40,46 +41,61 @@ public abstract class VelocityApplication extends Application {
         crashHandler.init(this);
         app = this;
 
+        VelocityCenter center =VelocityCenter.getInstance();
+        center.init(this);
     }
 
     /**
-     * ɾ������activity
+     * remove all(unless one) activity from list
      *
-     * @param b
+     * @param cls
      */
-    public void finishAll(boolean b) {
-        int size;
-        if (b)
-            size = activityList.size();
-        else
-            size = activityList.size() - 1;
-        for (int i = 0; i < size; i++) {
-            Activity activity = activityList.get(i);
-            if (activity != null) {
-                activity.finish();
+    public void removeAllActivityExceptOne(Class cls) {
+        while(true){
+            Activity activity=currentActivity();
+            if(activity==null){
+                break;
             }
+            if(activity.getClass().equals(cls) ){
+                break;
+            }
+            removeActivity(activity);
         }
     }
 
     /**
-     * ɾ��activity
+     * currentActivity
+     * @return
+     */
+    public Activity currentActivity(){
+        Activity activity=activityStack.lastElement();
+        return activity;
+    }
+
+    /**
+     * remove activity from list
      *
      * @param activity
      */
-    public void delActivity(Activity activity) {
-        if (activity != null) {
-            activityList.remove(activity);
+    public void removeActivity(Activity activity){
+        if(activity!=null){
+            activity.finish();
+            activityStack.remove(activity);
+            activity=null;
         }
-
     }
 
     /**
-     * ���activity
+     * add activity in list
      *
      * @param activity
      */
     public void addActivity(Activity activity) {
-        activityList.add(activity);
+        if(activity!=null){
+            activity.finish();
+            activityStack.remove(activity);
+            activity=null;
+        }
     }
 
 

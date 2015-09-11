@@ -9,7 +9,7 @@ public class VelocityCenter {
 
     private static VelocityCenter center;
 
-    public AppHelper helper;
+    public VelocityAppHelper helper;
 
     public static VelocityCenter getInstance(){
         if (center == null)
@@ -22,7 +22,8 @@ public class VelocityCenter {
     }
 
     public void init(Context context){
-        helper = new AppHelper();
+        helper = new VelocityAppHelper();
+
     }
 
 

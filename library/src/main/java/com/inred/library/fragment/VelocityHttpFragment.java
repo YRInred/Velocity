@@ -60,7 +60,7 @@ public abstract class VelocityHttpFragment extends VelocityFragment{
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
-                            onSuccessResponse(entitiy.getTagInt(), entitiy.getTag(), entitiy.getParser().doParser(s));
+                            onSuccessResponse(entitiy.getTagInt(), entitiy.getTag(), entitiy.getParser().doParser(s),entitiy.getObjects());
                         }
                     },
                     new Response.ErrorListener() {
@@ -68,7 +68,7 @@ public abstract class VelocityHttpFragment extends VelocityFragment{
                         public void onErrorResponse(VolleyError volleyError) {
                             onErrorsResponse(entitiy.getTagInt(),
                                     entitiy.getTag(),
-                                    volleyError);
+                                    volleyError,entitiy.getObjects());
                         }
                     }) {
                 @Override
@@ -84,8 +84,8 @@ public abstract class VelocityHttpFragment extends VelocityFragment{
     }
 
 
-    protected abstract void onSuccessResponse(int tagInt, String tag, Object entity);
+    protected abstract void onSuccessResponse(int tagInt, String tag, Object entity,Object... objects);
 
-    protected abstract void onErrorsResponse(int tagInt, String tag, VolleyError volleyError);
+    protected abstract void onErrorsResponse(int tagInt, String tag, VolleyError volleyError,Object... objects);
 
 }

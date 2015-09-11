@@ -12,7 +12,7 @@ import com.inred.library.R;
 /**
  * Created by inred on 2015/9/7.
  */
-public class AppHelper {
+public class VelocityAppHelper {
 
 
 

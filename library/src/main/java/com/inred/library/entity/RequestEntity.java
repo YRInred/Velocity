@@ -18,6 +18,18 @@ public class RequestEntity {
     private int requestMethod = Request.Method.GET;//默认为get方法
     private HashMap<String,String> params;//参数
     private VelocityParser parser;
+    private Object[] objects;//带传入对象
+
+
+
+    public Object[] getObjects() {
+        return objects;
+    }
+
+    public RequestEntity setObjects(Object... objects) {
+        this.objects = objects;
+        return this;
+    }
 
 
 

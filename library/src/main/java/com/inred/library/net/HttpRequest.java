@@ -15,7 +15,8 @@ import java.util.Map;
 /**
  * Created by inred on 2015/8/4.
  */
-public class HttpRequest {
+public class HttpRequest{
+
 
 
     private List<RequestEntity> requestEntitys;

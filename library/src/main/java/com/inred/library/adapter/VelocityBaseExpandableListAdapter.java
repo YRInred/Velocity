@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.TextView;
 
 import com.inred.library.entity.VelocityBELEntity;
 
@@ -51,10 +52,14 @@ public abstract class VelocityBaseExpandableListAdapter<T extends VelocityBELEnt
     }
 
     @Override
-    public abstract long getGroupId(int groupPosition) ;
+    public  long getGroupId(int groupPosition) {
+        return groupPosition;
+    };
 
     @Override
-    public abstract long getChildId(int groupPosition, int childPosition);
+    public  long getChildId(int groupPosition, int childPosition){
+        return childPosition;
+    };
     @Override
     public abstract boolean hasStableIds();
 
@@ -105,6 +110,19 @@ public abstract class VelocityBaseExpandableListAdapter<T extends VelocityBELEnt
             }
             return (T) view;
         }
+
+
+        public void setText(int viewId,int stringId){
+            TextView textView = findViewById(viewId);
+            textView.setText(stringId);
+        }
+
+
+        public void setText(int viewId,String stringId){
+            TextView textView = findViewById(viewId);
+            textView.setText(stringId);
+        }
+
 
         public View getConvertView() {
             return convertView;

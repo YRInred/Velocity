@@ -1,7 +1,11 @@
 package com.inred.library.filehttputil;
 
+import android.text.TextUtils;
+
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -11,6 +15,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
@@ -21,8 +26,10 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -33,8 +40,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -43,72 +52,108 @@ import javax.net.ssl.X509TrustManager;
 /**
  * Created by inred on 2015/9/11.
  */
-public class VelocityFilePostHttp extends Thread{
+public class VelocityFilePostHttp extends Thread {
 
     private static final int CONNECTION_TIMEOUT = 2 * 1000;//设置请求超时2秒钟 根据业务调整
     private static final int SO_TIMEOUT = 2 * 1000;//设置等待数据超时时间2秒钟 根据业务调整
     private static final Long CONN_MANAGER_TIMEOUT = 500L; //该值就是连接不够用的时候等待超时时间，一定要设置，而且不能太大 ()
 
     private String url;
-    private File[] files;
-    private String filekey;
+    private List<NameValuePair> params;
+    private Map<String, File> fileMap;
 
-    public VelocityFilePostHttp(String url,String filekey, File... files){
+    /**
+     * 文件上传
+     *
+     * @param url
+     * @param fileMap
+     */
+    public VelocityFilePostHttp(String url, Map<String, File> fileMap) {
         this.url = url;
-        this.files = files;
-        this.filekey = filekey;
+        this.fileMap = fileMap;
+    }
+
+    /**
+     * 参数与文件上传
+     *
+     * @param url
+     * @param params
+     * @param fileMap
+     */
+    public VelocityFilePostHttp(String url, List<NameValuePair> params, Map<String, File> fileMap) {
+        this.url = url;
+        this.params = params;
+        this.fileMap = fileMap;
     }
 
     /**
      * 步骤三:http上传文件执行
+     *
      * @param url
      * @param params
-     * @param files
+     * @param fileMap
      * @return
      */
-    private boolean postFile(String url, Map<String, String> params, File[] files) {
+    private String postFile(String url, List<NameValuePair> params, Map<String, File> fileMap) {
         try {
             HttpClient client = getHttpClient();//开启一个客户端http请求
             HttpPost post = new HttpPost(url);//创建 http post 请求
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.setCharset(Charset.forName(HTTP.UTF_8));//设置请求编码格式;
+//            builder.setCharset(Charset.forName(HTTP.UTF_8));//设置请求编码格式;
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);//设置浏览器兼容模式
-            for (File file : files) {
-                FileBody fileBody = new FileBody(file);//把文件转换成流对象filebody
-                builder.addPart(filekey//文件接收key
-                        , fileBody);
+
+            if (params != null && !params.isEmpty())
+                for (NameValuePair p : params) {
+                    builder.addTextBody(p.getName(), p.getValue(),
+                            ContentType.TEXT_PLAIN.withCharset(Charset.forName(HTTP.UTF_8)));
+                }
+
+            if (fileMap != null && !fileMap.isEmpty()) {
+                Set<Map.Entry<String, File>> entries = fileMap.entrySet();
+                for (Map.Entry<String, File> entry : entries) {
+                    builder.addPart(entry.getKey(), new FileBody(entry.getValue()));
+                }
             }
 
-            builder.addTextBody("method", params.get("method"));//设置请求参数
-            builder.addTextBody("fileTypes", params.get("fileTypes"));//设置请求参数
             HttpEntity entity = builder.build();
             VelocityMultipartEntity velocityMultipartEntity = new VelocityMultipartEntity(entity, new VelocityMultipartEntity.ProgressListener() {
                 @Override
                 public void transferred(long num, int progress) {
-                    currentProgress(num,progress);
+                    currentProgress(num, progress);
                 }
             });
             post.setEntity(velocityMultipartEntity);
             HttpResponse response = client.execute(post);
             if (response.getStatusLine().getStatusCode() == 200) {
-                return true;
+                return read(response);
             } else
-                return false;
+                return null;
         } catch (ClientProtocolException cpe) {
-            return false;
+            return null;
         } catch (IOException ioe) {
-            return false;
+            return null;
         } catch (Exception ex) {
-            return false;
+            return null;
         }
 
     }
 
-    public void currentProgress(long num, int progress){
+    /**
+     * 返回进度数
+     *
+     * @param num      传入文件long数
+     * @param progress 百分比progress
+     */
+    public void currentProgress(long num, int progress) {
 
     }
 
-    public void postCallBack(boolean isPostSuccess){
+    /**
+     * 上传完成与否回调
+     *
+     * @param isPostSuccess
+     */
+    public void postCallBack(boolean isPostSuccess, String string) {
 
     }
 
@@ -116,48 +161,50 @@ public class VelocityFilePostHttp extends Thread{
     @Override
     public void run() {
         super.run();
-       postCallBack(postFiles(url,files));
+        String backString = postFile(url, params, fileMap);
+        postCallBack(!TextUtils.isEmpty(backString), backString);
     }
 
-    /**
-     * 步骤二
-     * 获取文件的类型
-     *
-     * @param fileName ：文件名
-     * @return 文件类型
-     */
-    private String getFileType(String fileName) {
-        return fileName.substring(fileName.lastIndexOf("."), fileName.length());
-    }
+//    /**
+//     * 步骤二
+//     * 获取文件的类型
+//     *
+//     * @param fileName ：文件名
+//     * @return 文件类型
+//     */
+//    private String getFileType(String fileName) {
+//        return fileName.substring(fileName.lastIndexOf("."), fileName.length());
+//    }
 
-    /**
-     * 步骤一:解析文件名和类型
-     * 上传文件
-     * @param url
-     * @param files
-     * @return
-     */
-    public boolean postFiles(String url, File... files) {
-        File[] postfiles = files;
-        if (postfiles == null || postfiles.length == 0)
-            return false;
-        Map<String, String> params = new HashMap<>();
-        StringBuffer sbFileTypes = new StringBuffer();
-        for (File tempFile : postfiles) {
-            String filename = tempFile.getName();
-            sbFileTypes.append(getFileType(filename));
-        }
-
-        params.put("fileTypes", sbFileTypes.toString());
-        params.put("method", "upload");
-
-        return postFile(url, params, postfiles);
-
-    }
+//    /**
+//     * 步骤一:解析文件名和类型
+//     * 上传文件
+//     * @param url
+//     * @param files
+//     * @return
+//     */
+//    public boolean postFiles(String url, File... files) {
+//        File[] postfiles = files;
+//        if (postfiles == null || postfiles.length == 0)
+//            return false;
+//        Map<String, String> params = new HashMap<>();
+//        StringBuffer sbFileTypes = new StringBuffer();
+//        for (File tempFile : postfiles) {
+//            String filename = tempFile.getName();
+//            sbFileTypes.append(getFileType(filename));
+//        }
+//
+//        params.put("fileTypes", sbFileTypes.toString());
+//        params.put("method", "upload");
+//
+//        return postFile(url, params, postfiles);
+//
+//    }
 
 
     /**
      * 自定义HttpClient
+     *
      * @return
      */
     private HttpClient getHttpClient() {
@@ -228,6 +275,42 @@ public class VelocityFilePostHttp extends Thread{
         public Socket createSocket() throws IOException {
             return sslContext.getSocketFactory().createSocket();
         }
+    }
+
+    /**
+     * Read http requests result from response .
+     *
+     * @param response : http response by executing httpclient
+     * @return String : http response content
+     */
+    public static String read(HttpResponse response) {
+        String result = "";
+        HttpEntity entity = response.getEntity();
+        InputStream inputStream;
+        try {
+            inputStream = entity.getContent();
+            ByteArrayOutputStream content = new ByteArrayOutputStream();
+
+            Header header = response.getFirstHeader("Content-Encoding");
+            if (header != null && header.getValue().toLowerCase().indexOf("gzip") > -1) {
+                inputStream = new GZIPInputStream(inputStream);
+            }
+
+            // Read response into a buffered stream
+            int readBytes = 0;
+            byte[] sBuffer = new byte[512];
+            while ((readBytes = inputStream.read(sBuffer)) != -1) {
+                content.write(sBuffer, 0, readBytes);
+            }
+            // Return result from buffered stream
+            result = new String(content.toByteArray(), "UTF-8");
+            return result;
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.inred.library;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -15,6 +16,9 @@ import java.util.Map;
  * Created by inred on 2015/8/4.
  */
 public abstract class VelocityHttpActivity extends VelocityActivity {
+
+    protected  int SOCKTIMEOUT = 5;//timeout time
+    protected  int RETRYTIME = 1;//retry times
 
     protected List<RequestEntity> requestEntitys;
 
@@ -80,6 +84,7 @@ public abstract class VelocityHttpActivity extends VelocityActivity {
                     return entitiy.getParams();
                 }
             };
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(SOCKTIMEOUT*1000,RETRYTIME,1.0f));
             VelocityApplication.getInstance().addToRequestQueue(stringRequest, entitiy.getTag());
         }
         requestEntitys.clear();

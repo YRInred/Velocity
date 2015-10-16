@@ -6,13 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.List;
 
 /**
  * Created by inred on 2015/8/25.
  */
-public abstract class VelocityBaseAdapter<T> extends BaseAdapter {
+public abstract class VelocityBaseAdapter<T extends Object> extends BaseAdapter {
 
     protected List<T> datas;
     protected Context context;
@@ -34,7 +35,7 @@ public abstract class VelocityBaseAdapter<T> extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public T getItem(int position) {
         return datas.get(position);
     }
 
@@ -47,8 +48,6 @@ public abstract class VelocityBaseAdapter<T> extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         return getViewHolder(convertView, parent, position).getConvertView();
     }
-
-    protected ViewHolder viewHolder;
 
     public abstract ViewHolder getViewHolder(View convertView, ViewGroup parent, int position);
 
@@ -79,6 +78,17 @@ public abstract class VelocityBaseAdapter<T> extends BaseAdapter {
                 views.put(resourceId, view);
             }
             return (T) view;
+        }
+
+        public void setText(int viewId,int stringId){
+            TextView textView = findViewById(viewId);
+            textView.setText(stringId);
+        }
+
+
+        public void setText(int viewId,String stringId){
+            TextView textView = findViewById(viewId);
+            textView.setText(stringId);
         }
 
         public View getConvertView() {

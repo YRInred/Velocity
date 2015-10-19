@@ -18,6 +18,12 @@ public abstract class VelocityQuickAdapter<T extends Object> extends VelocityBas
         super(context);
     }
 
+    /**
+     * 快速构造器
+     * @param context
+     * @param layoutId
+     * @param datas
+     */
     public VelocityQuickAdapter(Context context,int layoutId,List<T> datas){
         this(context);
         this.layoutId = layoutId;
@@ -36,6 +42,12 @@ public abstract class VelocityQuickAdapter<T extends Object> extends VelocityBas
         return holder;
     }
 
+    /**
+     * 事件构建
+     * @param holder
+     * @param item
+     * @param <T>
+     */
     public abstract <T> void convert(ViewHolder holder,T item);
 
 }

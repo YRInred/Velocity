@@ -19,6 +19,13 @@ public abstract class VelocityQuickExpandableListAdapter<T,V> extends VelocityBa
         super(context);
     }
 
+    /**
+     * 快速构造器
+     * @param context
+     * @param groupLayoutId
+     * @param childLayoutId
+     * @param groups
+     */
     public VelocityQuickExpandableListAdapter(Context context,int groupLayoutId,int childLayoutId,List<T> groups){
         this(context);
         this.groupLayoutId = groupLayoutId;
@@ -48,12 +55,24 @@ public abstract class VelocityQuickExpandableListAdapter<T,V> extends VelocityBa
     public ViewHolder getGroupViewHolder(View convertView, ViewGroup parent, int groupPosition, boolean isExpanded) {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, childLayoutId);
         group = getGroup(groupPosition);
-        convertGroup(holder,group);
+        convertGroup(holder, group);
         return holder;
     }
 
+    /**
+     * 父布局事件构建
+     * @param holder
+     * @param item
+     * @param <T>
+     */
     public abstract <T> void convertGroup(ViewHolder holder,T item);
 
+    /**
+     * 子布局事件构建
+     * @param holder
+     * @param item
+     * @param <V>
+     */
     public abstract <V> void convertChild(ViewHolder holder,V item);
 
 

@@ -86,16 +86,25 @@ public abstract class VelocityApplication extends Application {
     }
 
     /**
+     * remove last activity
+     */
+    public void removeActivity(){
+        Activity activity=activityStack.lastElement();
+        if(activity!=null){
+            activity.finish();
+            activity=null;
+        }
+    }
+
+    /**
      * add activity in list
      *
      * @param activity
      */
     public void addActivity(Activity activity) {
-        if(activity!=null){
-            activity.finish();
-            activityStack.remove(activity);
-            activity=null;
-        }
+       if (activityStack == null)
+           activityStack = new Stack<Activity>();
+        activityStack.add(activity);
     }
 
 

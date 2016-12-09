@@ -37,7 +37,7 @@ public abstract class VelocityQuickAdapter<T extends Object> extends VelocityBas
 
         ViewHolder holder = ViewHolder.get(context,convertView,parent,layoutId);
         data = getItem(position);
-        convert(holder,data);
+        convert(holder,data,position);
 
         return holder;
     }
@@ -48,6 +48,6 @@ public abstract class VelocityQuickAdapter<T extends Object> extends VelocityBas
      * @param item
      * @param <T>
      */
-    public abstract <T> void convert(ViewHolder holder,T item);
+    public abstract <T> void convert(ViewHolder holder,T item,int position);
 
 }

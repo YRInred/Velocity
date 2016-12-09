@@ -4,12 +4,14 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.inred.library.entity.VelocityBELEntity;
+
 import java.util.List;
 
 /**
  * Created by inred on 2015/10/16.
  */
-public abstract class VelocityQuickExpandableListAdapter<T,V> extends VelocityBaseExpandableListAdapter{
+public abstract class VelocityQuickExpandableListAdapter<T extends VelocityBELEntity<V>,V> extends VelocityBaseExpandableListAdapter{
 
     private int groupLayoutId;
     private int childLayoutId;

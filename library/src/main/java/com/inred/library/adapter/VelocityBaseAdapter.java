@@ -1,6 +1,7 @@
 package com.inred.library.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ public abstract class VelocityBaseAdapter<T extends Object> extends BaseAdapter 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Log.e("getview","getview="+position);
         return getViewHolder(convertView, parent, position).getConvertView();
     }
 
